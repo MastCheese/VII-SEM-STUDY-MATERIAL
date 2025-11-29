@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDY PORTAL</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --text: #111;
+            --subtext: #555;
+            --accent: #007aff; /* iOS Blue */
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --radius: 18px;
+            --shadow: 0 8px 20px rgba(0,0,0,0.08);
+            --shadow-strong: 0 12px 30px rgba(0,0,0,0.12);
+        }
+
+        body.dark {
+            --bg: #0d1117;
+            --text: #e6e6e6;
+            --subtext: #9ba3b0;
+            --accent: #339aff;
+            --glass-bg: rgba(20, 20, 20, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 20px rgba(255,255,255,0.05);
+            --shadow-strong: 0 12px 30px rgba(255,255,255,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            color: var(--text);
+            transition: 0.3s ease;
+            box-shadow: var(--shadow);
+            padding: 0;
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.07);
+        }
+
+        @media(max-width: 600px) {
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                top: 12px;
+                right: 12px;
+            }
+        }
+
+        /* SUN & MOON ANIMATION */
+        .sun-and-moon .sun-beams {
+            transform-origin: center;
+            transition: opacity .3s ease;
+        }
+
+        body.dark .sun-and-moon .sun-beams {
+            opacity: 0;
+        }
+
+        .sun-and-moon .moon > circle {
+            transition: transform .45s ease;
+        }
+
+        body.dark .sun-and-moon .moon > circle {
+            transform: translate(-8px, -5px);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            width: 100%;
+            padding: 4rem 1rem 6rem;
+            text-align: center;
+            background: linear-gradient(135deg, #e8ecf4, #ffffff);
+            border-bottom: 1px solid #e3e3e3;
+            transition: 0.3s ease;
+        }
+
+        body.dark .hero {
+            background: linear-gradient(135deg, #0f141a, #141a21);
+            border-bottom: 1px solid #222;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero h2 {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            color: var(--subtext);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        body.dark .tagline {
+            color: var(--subtext);
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .divider {
+            width: 70px;
+            height: 4px;
+            background: var(--accent);
+            margin: 0 auto 3rem;
+            border-radius: 10px;
+        }
+
+        /* --- CARD GRID --- */
+        .cards-grid {
+            display: grid;
+            gap: 1.6rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        /* --- CARD --- */
+        .subject-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 1.7rem;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .card-date {
+            font-size: 0.9rem;
+            color: var(--subtext);
+            margin-bottom: 1rem;
+        }
+
+        .card-link {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* --- CTA BOX --- */
+        .cta-section {
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .cta-box {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            border-radius: var(--radius);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+        }
+
+        .cta-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-description {
+            color: var(--subtext);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            border-radius: var(--radius);
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(0,122,255,0.25);
+            transition: all 0.25s;
+        }
+
+        .cta-button:hover {
+            background: #006be6;
+            transform: translateY(-3px);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 3rem;
+            padding: 2rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        body.dark footer {
+            color: var(--subtext);
+        }
+
+        /* SUBJECT MATERIAL PANELS */
+        .materials-panel {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem 2rem;
+            display: none;
+        }
+
+        .materials-panel.active {
+            display: block;
+        }
+
+        .materials-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .materials-subtitle {
+            font-size: 0.95rem;
+            color: var(--subtext);
+            margin-bottom: 1rem;
+        }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .file-button {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--text);
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: 0.2s ease;
+        }
+
+        .file-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        /* MODAL VIEWER */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-inner {
+            width: min(1000px, 96vw);
+            height: min(80vh, 90vh);
+            background: var(--bg);
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--subtext);
+        }
+
+        .modal-body {
+            flex: 1;
+            background: #000;
+        }
+
+        .modal-body iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        @media (max-width: 600px) {
+            .modal-inner {
+                height: 85vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- THEME TOGGLE -->
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+      <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+        <mask class="moon" id="moon-mask">
+          <rect width="100%" height="100%" fill="white"/>
+          <circle cx="24" cy="10" r="6" fill="black"/>
+        </mask>
+        <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor"/>
+        <g class="sun-beams" stroke="currentColor">
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </g>
+      </svg>
+    </button>
+
+    <!-- MODAL VIEWER -->
+    <div class="modal" id="viewer-modal" onclick="backdropClose(event)">
+        <div class="modal-inner">
+            <div class="modal-header">
+                <h3 id="viewer-title">Material</h3>
+                <button class="modal-close" onclick="closeViewer()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="file-viewer" allow="fullscreen"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1>DSE VII SEM</h1>
+        <h2>END SEM STUDY PORTAL</h2>
+        <p class="tagline">SYLLABUS • PPTS • ASSIGNMENTS</p>
+    </header>
+
+    <!-- SUBJECTS -->
+    <section class="container">
+        <h2 class="section-title">SUBJECT WISE RESOURCES</h2>
+        <div class="divider"></div>
+
+        <div class="cards-grid">
+            <!-- BT -->
+            <button type="button" class="subject-card" onclick="togglePanel('bt-materials')">
+                <h3 class="card-title">BT</h3>
+                <p class="card-date">EXAMINATION DATE: 01.12.25</p>
+                <p class="card-link">VIEW MATERIALS →</p>
+            </button>
+
+            <!-- CV -->
+            <button type="button" class="subject-card" onclick="togglePanel('cv-materials')">
+                <h3 class="card-title">CV</h3>
+                <p class="card-date">EXAMINATION DATE: 03.12.25</p>
+                <p class="card-link">VIEW MATERIALS →</p>
+            </button>
+
+            <!-- IR -->
+            <button type="button" class="subject-card" onclick="togglePanel('ir-materials')">
+                <h3 class="card-title">IR</h3>
+                <p class="card-date">EXAMINATION DATE: 27.11.25</p>
+                <p class="card-link">VIEW MATERIALS →</p>
+            </button>
+
+            <!-- SCM -->
+            <button type="button" class="subject-card" onclick="togglePanel('scm-materials')">
+                <h3 class="card-title">SCM</h3>
+                <p class="card-date">EXAMINATION DATE: 05.12.25</p>
+                <p class="card-link">VIEW MATERIALS →</p>
+            </button>
+
+            <!-- SE -->
+            <button type="button" class="subject-card" onclick="togglePanel('se-materials')">
+                <h3 class="card-title">SE</h3>
+                <p class="card-date">EXAMINATION DATE: 29.11.25</p>
+                <p class="card-link">VIEW MATERIALS →</p>
+            </button>
+
+            <!-- SNA -->
+            <button type="button" class="subject-card" onclick="togglePanel('sna-materials')">
+                <h3 class="card-title">SNA</h3>
+                <p class="card-date">EXAMINATION DATE: 25.11.25</p>
+                <p class="card-link">VIEW MATERIALS →</p>
+            </button>
+        </div>
+    </section>
+
+    <!-- BT MATERIALS PANEL -->
+    <section class="materials-panel" id="bt-materials">
+        <h3 class="materials-title">BLOCKCHAIN TECHNOLOGY</h3>
+        <p class="materials-subtitle">SELECT A FILE TO OPEN IT IN THE VIEWER.</p>
+        <div class="file-list">
+        <button class="file-button"
+        onclick="openFile('1MIUqsYDsl_f8InctWjeHDzjHV8lggDNX','CHAPTER01')">
+        CHAPTER01
+    </button>
+    <button class="file-button"
+        onclick="openFile('1nyJK_Dz-74XjLahnqvjM7u2xGsBaC0yB','CHAPTER02')">
+        CHAPTER02
+    </button>
+    <button class="file-button"
+        onclick="openFile('1uy_4Qnavqdc4PWhKg-8VqyqfHF9gCGge','CHAPTER03')">
+        CHAPTER03
+    </button>
+    <button class="file-button"
+        onclick="openFile('1eQRzK-D0aAaguzGusTFRSe5pUK8UISyE','CHAPTER04')">
+        CHAPTER04
+    </button>
+    <button class="file-button"
+        onclick="openFile('1-RFofJ96L3g_MbZjahFM0Qukap5QyL2T','CHAPTER05')">
+        CHAPTER05
+    </button>
+    <button class="file-button"
+        onclick="openFile('1TXOTNm-npA75xmLzuQiEaIEcy-3gSTDI','CHAPTER06')">
+        CHAPTER06
+    </button>
+    <button class="file-button"
+        onclick="openFile('1OQtzrkxFW0nmWsSKikPj5StXbUu8cBzH','CHAPTER07')">
+        CHAPTER07
+    </button>
+    <button class="file-button"
+        onclick="openFile('1Ep1cHzDdmCNhVfneaPAeEGJJ2iHRVEQ6','CHAPTER10')">
+        CHAPTER10
+    </button>
+    <button class="file-button"
+        onclick="openFile('1ASBJAJ-gZokIda3YGaoJzSgqa-uLa3Z5','Lecture21_598PV')">
+        Lecture21_598PV
+    </button>
+    <button class="file-button"
+        onclick="openFile('1h0gZp0RGWMBqM6PwuJ5T7Tp0qVlLzEZN','COURSE HANDOUT')">
+        COURSE HANDOUT
+        </button>
+        <button class="file-button"
+        onclick="openFile('1WOsF8aQkedkuAV06Jrytn4sZmDdxZ7VE','QUESTION BANK')">
+        QUESTION BANK
+        </button>
+        <button class="file-button"
+        onclick="openFile('1C_gTW3kK5QEA3xemLvjjS9Gw3FykNVOO','IT486 - SPV')">
+        IT486 - SPV
+        </button>
+        <button class="file-button"
+        onclick="openFile('1Q0TcJEID3hktFpck3W9XV6ve1eSTsmV2','CONSENSUS')">
+        CONSENSUS
+        </button>
+        <button class="file-button"
+        onclick="openFile('1Zo2H9LpFuDFPGHz02eVgMi_O8rXQFges','SHA')">
+        SHA
+        </button>
+        <button class="file-button"
+        onclick="openFile('1XYCYrGPaqBSquaTkt9ogOLFKNk0vcxON','MERKLE TREE')">
+        MERKLE TREE
+        </button>
+        <button class="file-button"
+        onclick="openFile('1ChVQvunbQx6Kw3Y9t8UfSwLWM6BsPIq2','SECURITY')">
+        SECURITY
+        </button>
+        <button class="file-button"
+        onclick="openFile('10BbG_QLqnJwCMWQw0esQu_x0GSCuZBPn','A2 IMPORTANT TOPICS')">
+        A2 IMPORTANT TOPICS
+        </button>
+        </div>
+    </section>
+
+    <!-- CV MATERIALS PANEL -->
+    <section class="materials-panel" id="cv-materials">
+        <h3 class="materials-title">COMPUTER VISION</h3>
+        <p class="materials-subtitle">SELECT A FILE TO OPEN IT IN THE VIEWER.</p>
+
+        <div class="file-list">
+            <button class="file-button"
+                onclick="openFile('1g01hc9h1m3BaRLqQhZCqKK6T0-VEX8mo','1_THRESHOLDING_WM')">
+                1_THRESHOLDING_WM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1fmZjDLVlYeztvgJNY3vH70Ae6aH32N4R','2_GLOBAL THRESHOLD_WM')">
+                2_GLOBAL THRESHOLD_WM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1EvezjsjJ6A9yHEWbLqUnwbCjLlawtugH','3_ITERATIVE_WM')">
+                3_ITERATIVE_WM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1b3mD2QWSY6bJQlFyaw7MfzZ5rRT80mN1','4_MULTIVARIABLE THRESHOLDING_WM')">
+                4_MULTIVARIABLE THRESHOLDING_WM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1xpt7HVUrUQVbKgFMBcGresoFYqoF0hse','ASSIGNMENT 1')">
+                ASSIGNMENT 1
+            </button>
+            <button class="file-button"
+                onclick="openFile('1gcF0qO-f5ob9cXuhx2QtbRR4HF2in4F0','AVERAGE FILTER')">
+                AVERAGE FILTER
+            </button>
+            <button class="file-button"
+                onclick="openFile('12s3XzW_5TT9sFyAm07dOJQa9ZsMmwiJ1','COMPUTER VISION VII SEM')">
+                COMPUTER VISION VII SEM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1eSjJq_VNPf4ewcLWoTdXFjRPlVvUTI52','COMPUTER VISION HANDOUT')">
+                COMPUTER VISION HANDOUT
+            </button>
+            <button class="file-button"
+                onclick="openFile('132CfaPSrWaSGGrMA76QmxqRxQ2h9v51I','HISTOGRAM MERGED')">
+                HISTOGRAM MERGED
+            </button>
+            <button class="file-button"
+                onclick="openFile('1vXPzcb1Z3qQaYV0gugTPwYFFiGLHOQUX',' MODULE1 - INTRO TO IMAGE PROCESSING')">
+                MODULE1 - INTRO TO IMAGE PROCESSING
+            </button>
+            <button class="file-button"
+                onclick="openFile('1PAxA3cZ1QQrkPDRTQUFV2Z8MwC1dWiWD','MODULE2 - PART A - IMAGE FORMATION')">
+                MODULE2 - PART A - IMAGE FORMATION
+            </button>
+            <button class="file-button"
+                onclick="openFile('1ENmw_t0GSeldrbZyzWxN5xiaqwKvTwvM','MODULE2 - PART B IMAGE PREPROCESSING')">
+                MODULE2 - PART B IMAGE PREPROCESSING
+            </button>
+            <button class="file-button"
+                onclick="openFile('1d5T2mbgxn8EcarV09TqjcfR2xN30Bylu','MODULE4 - IMAGE SEGMENTATION')">
+                MODULE4 - IMAGE SEGMENTATION
+            </button>
+        </div>
+    </section>
+
+    <!-- IR MATERIALS PANEL -->
+    <section class="materials-panel" id="ir-materials">
+        <h3 class="materials-title">INFORMATION RETRIEVAL</h3>
+        <p class="materials-subtitle">SELECT A FILE TO OPEN IT IN THE VIEWER.</p>
+
+        <div class="file-list">
+            <button class="file-button"
+                onclick="openFile('1CeDqIAMU0R6-T2jo2OE9faPlhDycUh1F','IR SYLLABUS')">
+                IR SYLLABUS
+            </button>
+            <button class="file-button"
+                onclick="openFile('1xr6jVzz_JtuBZ0hpDl9_iAJ20qOYpfZ5','INTRODUCTION TO IR')">
+                INTRODUCTION TO IR
+            </button>
+            <button class="file-button"
+                onclick="openFile('1b2wh4HKpjyDhefPBRIs-kORxYH1IPS7x','INCREMENTAL CRAWLERS IN INFORMATION RETRIEVAL')">
+                INCREMENTAL CRAWLERS IN INFORMATION RETRIEVAL
+            <button class="file-button"
+                onclick="openFile('1ul_iElhsLSXB9K5tRCQFgFpdGr66G8Sm','INFORMATION RETRIEVAL - PPT07')">
+                INFORMATION RETRIEVAL - PPT07
+            </button>
+            <button class="file-button"
+                onclick="openFile('1AjuosgbsRcJa580UUJa8pzflyqKlO03-','ASSIGNMENT01')">
+                ASSIGNMENT01
+            </button>
+        </div>
+    </section>
+
+    <!-- SCM MATERIALS PANEL -->
+    <section class="materials-panel" id="scm-materials">
+        <h3 class="materials-title">SUPPLY CHAIN MANAGEMENT</h3>
+        <p class="materials-subtitle">SELECT A FILE TO OPEN IT IN THE VIEWER.</p>
+
+        <div class="file-list">
+            <button class="file-button"
+                onclick="openFile('1fLc9egLx-FyTxXKIwWB2oGqMHDFHCXeQ','TRAVELLING SALESMAN PROBLEM')">
+                TRAVELLING SALESMAN PROBLEM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1evkwJnKJchWwqF-rLjHSKWVHIiW6Hh-0','CH03 - PROJECT MANAGEMENTf')">
+                CH03 - PROJECT MANAGEMENT
+            </button>
+            <button class="file-button"
+                onclick="openFile('1nMIb2epHzelAG55V65P6eTGS6GWG6B4L','MRP')">
+                MRP
+            </button>
+            <button class="file-button"
+                onclick="openFile('1_bzxX4rincbhXduigBH99usPXlw3XBXe','REFERENCE BOOK - CHOPRA MEINDL')">
+                REFERENCE BOOK - CHOPRA MEINDL
+            </button>
+            <button class="file-button"
+                onclick="openFile('1UvP1yYFot4BQOu-mSeZYQeCxRyzK0IfU','FORECASTING')">
+                FORECASTING
+            </button>
+            <button class="file-button"
+                onclick="openFile('1KuZxEwu5NvF1Xsb_Py0aqsr5fGbJGAdw','CH02 - SUPPLY CHAIN INTEGRATION')">
+                CH02 - SUPPLY CHAIN INTEGRATION
+            </button>
+            <button class="file-button"
+                onclick="openFile('1-LqC5RPb7WOwYVhZZCQV_hVDn79_Axe4','CH01 - INTRODUCTION TO SCM')">
+                CH01 - INTRODUCTION TO SCM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1L4EWIiXfSeAG-SLQ3iwIVbmlM4Rp_0YV','INVENTORY MANAGEMENT')">
+                INVENTORY MANAGEMENT
+            </button>
+            <button class="file-button"
+                onclick="openFile('1vcHarQa6NAMeod2pFdQYTRYVNoeAPw1_','CAPACITY & FACILITIES DESIGN')">
+                CAPACITY & FACILITIES DESIGN
+            </button>
+        </div>
+    </section>
+
+    <!-- SE MATERIALS PANEL -->
+    <section class="materials-panel" id="se-materials">
+        <h3 class="materials-title">SOFTWARE ENGINEERING</h3>
+        <p class="materials-subtitle">SELECT A FILE TO OPEN IT IN THE VIEWER.</p>
+
+        <div class="file-list">
+            <button class="file-button"
+                onclick="openFile('1Xqfw9X1LHm58pAWyECxwBCPa842sfH7B','CH01 - INTRODUCTION')">
+                CH01 - INTRODUCTION
+            </button>
+            <button class="file-button"
+                onclick="openFile('1HPxMlW7B2yy3u86PdayZAMVv-vKS0YzW','CH02 - SOFTWARE DEVELOPMENT LIFE CYCLE MODEL')">
+                CH02 - SOFTWARE DEVELOPMENT LIFE CYCLE MODEL
+            </button>
+            <button class="file-button"
+                onclick="openFile('10v9xw6P3AYYmyaEPhebw9UcDhlTPw-eI','CH03 - SOFTWARE REQUIREMENTS')">
+                CH03 - SOFTWARE REQUIREMENTS
+            </button>
+            <button class="file-button"
+                onclick="openFile('1hkFfsv02YBw3CvNlr_k06jg2pDnAYJZA','CH04 - SOFTWARE PROJECT PLANNING')">
+                CH04 - SOFTWARE PROJECT PLANNING
+            </button>
+            <button class="file-button"
+                onclick="openFile('1kEhNqile89msSZTa97QI0uGscfLE3HRY','CH05 - SOFTWARE DESIGN')">
+                CH05 - SOFTWARE DESIGN
+            </button>
+            <button class="file-button"
+                onclick="openFile('170BC5-D_F5C_RoVPPyx5mxRv4HAEwAZ0','CH06 - SOFTWARE METRICS')">
+                CH06 - SOFTWARE METRICS
+            </button>
+            <button class="file-button"
+                onclick="openFile('1RR3Cp6UEupz9EItZ_C2B0sNZZH_feJtw','CH07 - SOFTWARE RELIABILITY')">
+                CH07 - SOFTWARE RELIABILITY
+            </button>
+            <button class="file-button"
+                onclick="openFile('1wWvJewIozZet0by_txECGwmqxvj4JkGJ','CH08 - SOFTWARE TESTING')">
+                CH08 - SOFTWARE TESTING
+            </button>
+            <button class="file-button"
+                onclick="openFile('1g2eJlRHJ82N_xUL6aX4cc3FvJ0IkYdqJ','CH09 - SOFTWARE MAINTENANCE')">
+                CH09 - SOFTWARE MAINTENANCE
+            </button>
+            <button class="file-button"
+                onclick="openFile('1fVE-LszAaw1LlPVyz12PN4R9Jx4POfQU','CH10 - SOFTWARE CERTIFICATION')">
+                CH10 - SOFTWARE CERTIFICATION
+            </button>
+            <button class="file-button"
+                onclick="openFile('1XO7wnen7mv2UzKRF3yAdKiCXu74aotU7','COMPARISON OF MODELS')">
+                COMPARISON OF MODELS
+            </button>
+            <button class="file-button"
+                onclick="openFile('1rVY40Wt0QC8CwPXeGc297bIb3v3PU7fU','SE - ASSIGNMENT')">
+                SE - ASSIGNMENT
+            </button>
+        </div>
+    </section>
+
+    <!-- SNA MATERIALS PANEL -->
+    <section class="materials-panel" id="sna-materials">
+        <h3 class="materials-title">SOCIAL NETWORK ANALYSIS</h3>
+        <p class="materials-subtitle">SELECT A FILE TO OPEN IT IN THE VIEWER.</p>
+
+        <div class="file-list">
+            <button class="file-button"
+                onclick="openFile('1Rt5mj1WGCw3dbN4iGm8Y26TRXHULfUCI','ANOMALY DETECTION')">
+                ANOMALY DETECTION
+            </button>
+            <button class="file-button"
+                onclick="openFile('1S6Nc-ayN8c5_Ng7uBw8XVIqllzo_rslO','ANOMALY DETECTION - HITESH MOHAPATRA')">
+                ANOMALY DETECTION - HITESH MOHAPATRA
+            </button>
+            <button class="file-button"
+                onclick="openFile('1qrQdJC9DQvvwkoM3m0MnRVHzMJjGY2bh','DM_PAGERANK')">
+                DM_PAGERANK
+            </button>
+            <button class="file-button"
+                onclick="openFile('1HU3uSUR7NvU5A34i0A3nw6ao5Fbt_zFf','SNA COURSE HANDOUT')">
+                SNA COURSE HANDOUT
+            </button>
+            <button class="file-button"
+                onclick="openFile('1B0PXf_1dOOoX_P9RvW1GWjsk7ZBysZZ9','SNA SET - 2')">
+                SNA SET - 2
+            </button>
+            <button class="file-button"
+                onclick="openFile('1K810CnF6JQithun4aVVkK8R_z04-ePeK','SNA SET - 3')">
+                SNA SET - 3
+            </button>
+            <button class="file-button"
+                onclick="openFile('14k2JvlbFZOkmePvtkTzZamBhqQpps4CT','GOOGLE_PAGERANKING_PROBLEM_THE_MODEL_AND_PROBLEM')">
+                GOOGLE_PAGERANKING_PROBLEM_THE_MODEL_AND_PROBLEM
+            </button>
+            <button class="file-button"
+                onclick="openFile('1McWXS6gV4iow4W8xWDV55wJZF09X9LJ_','ICDM06-HTONG-2006-12-14')">
+                ICDM06-HTONG-2006-12-14
+            </button>
+            <button class="file-button"
+                onclick="openFile('12YlsMI14s4fY9UVDkOY19c0da0G5cUFF','INFLUENCE - 1')">
+                INFLUENCE - 1
+            </button>
+            <button class="file-button"
+                onclick="openFile('1KdGTjrwLl08KNInlnxom_mOA1DiAUw8z','LECTURE19 - PAGERANK')">
+                LECTURE19 - PAGERANK
+            </button>
+            <button class="file-button"
+                onclick="openFile('1IvTuOm4p17SJYgGHG93UDoAoBcw3YDca','SIMILARITY & DISTANCE')">
+                SIMILARITY & DISTANCE
+            </button>
+            <button class="file-button"
+                onclick="openFile('1EJ1rtYpzXkx25BIv-iTt91dfwjWDtl3Z','SNA LECTURE - 1')">
+                SNA LECTURE - 1
+            </button>
+            <button class="file-button"
+                onclick="openFile('1aj-PrFxe_c8WfR8wY_8O6lA_IFPagYbk','SNA LECTURE - 2')">
+                SNA LECTURE - 2
+            </button>
+            <button class="file-button"
+                onclick="openFile('1ISE_Lw2vUkSiBf7NKMieMglU4H5-aVmF','social_v3.pdf')">
+                SOCIAL_V3
+            </button>
+            <button class="file-button"
+                onclick="openFile('1BfP7ffdsE5AhB-aheNSmuqUgaaeDI5FB','TRUSTRANK ALGORITHM')">
+                TRUSTRANK ALGORITHM
+            </button>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="container cta-section">
+        <div class="cta-box">
+            <h2 class="cta-title">COMPLETE MATERIAL</h2>
+            <p class="cta-description">ACCESS TO SUBJECT WISE PPTS, ASSIGNMENTS & REFERENCE BOOKS.</p>
+            <a class="cta-button" target="_blank"
+               href="https://drive.google.com/drive/u/2/folders/1Lt_K-qOXrnSn3dyhjV1CpN8gRrYR8ooe">
+                OPEN DRIVE
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        CREATED FOR DSE VII SEM STUDENTS<br>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const toggleBtn = document.getElementById("theme-toggle");
+        toggleBtn.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+        });
+
+        // Toggle panels, only one open at a time
+        function togglePanel(panelId) {
+            const panels = document.querySelectorAll('.materials-panel');
+            panels.forEach(panel => {
+                if (panel.id === panelId) {
+                    panel.classList.toggle('active');
+                    if (panel.classList.contains('active')) {
+                        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                } else {
+                    panel.classList.remove('active');
+                }
+            });
+        }
+
+        // Open a specific file in the modal viewer
+        function openFile(fileId, title) {
+            const iframe = document.getElementById('file-viewer');
+            const modal = document.getElementById('viewer-modal');
+            const heading = document.getElementById('viewer-title');
+
+            heading.textContent = title || 'Material';
+            iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeViewer() {
+            const modal = document.getElementById('viewer-modal');
+            const iframe = document.getElementById('file-viewer');
+            modal.style.display = 'none';
+            iframe.src = '';
+            document.body.style.overflow = '';
+        }
+
+        function backdropClose(e) {
+            if (e.target.id === 'viewer-modal') {
+                closeViewer();
+            }
+        }
+    </script>
+
+</body>
+</html>
